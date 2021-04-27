@@ -1,14 +1,25 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Slider))]
 
-public class ChangeHealth : MonoBehaviour
+public class ChangeSliderValue : MonoBehaviour
 {
-    [SerializeField] private float _step;
+    [SerializeField] private Player _player;
 
     private Slider _slider;
     private float _nextValue;
+
+    private void OnEnable()
+    {
+        _player.HealthChanged += OnHealthChanged;
+    }
+
+    private void OnDisable()
+    {
+        _player.HealthChanged -= OnHealthChanged;
+    }
 
     private void Start()
     {
@@ -21,13 +32,8 @@ public class ChangeHealth : MonoBehaviour
         _slider.value = Mathf.MoveTowards(_slider.value, _nextValue, .5f);
     }
 
-    public void Damage()
+    private void OnHealthChanged(int health)
     {
-        _nextValue = _slider.value - _step;
-    }
-
-    public void Heal()
-    {
-        _nextValue = _slider.value + _step;
+        _nextValue = health;
     }
 }
